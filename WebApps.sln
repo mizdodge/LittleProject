@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.30804.86
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "By.humbi", "By.humbi\By.humbi.csproj", "{88F7C356-1C7F-4255-9FE4-1627BA7E9E26}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebApplication1", "WebApplication1\WebApplication1.csproj", "{6C51D321-A678-43FF-BDFE-A67C8509B33C}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{88F7C356-1C7F-4255-9FE4-1627BA7E9E26}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{88F7C356-1C7F-4255-9FE4-1627BA7E9E26}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{88F7C356-1C7F-4255-9FE4-1627BA7E9E26}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{88F7C356-1C7F-4255-9FE4-1627BA7E9E26}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6C51D321-A678-43FF-BDFE-A67C8509B33C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6C51D321-A678-43FF-BDFE-A67C8509B33C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6C51D321-A678-43FF-BDFE-A67C8509B33C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6C51D321-A678-43FF-BDFE-A67C8509B33C}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {94847245-1EC7-4D83-A9C3-37C77B9C4AA1}
+	EndGlobalSection
+EndGlobal
