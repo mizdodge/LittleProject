@@ -1,0 +1,40 @@
+﻿@{
+    ViewData["Title"] = "Register Page";
+    Layout = "_Layout_Login";
+}
+
+<div class="text-center">
+    <div class="row"><h2 class="">Register</h2></div>
+    <div class="row">
+        <div class="col-md-12">
+            <form class="form-auth-small" asp-controller="Register" asp-action="RegisterUser" id="form-data">
+                <div class="col-md-4"><input type="text" class="form-control" id="signin-username" name="Username" placeholder="Username " required></div><br />
+                <div class="col-md-4"><input type="password" class="form-control" id="signin-password" name="Password" placeholder="Password" required></div><br />
+                <div class="col-md-4"><input type="password" class="form-control" id="signin-password" name="Password" placeholder="Confirm Password" required></div><br />
+                <div class="col-md-4"><input type="text" class="form-control" id="signin-Address" name="Address" placeholder="Address" required></div><br />
+                <div class="col-md-4"><input type="text" class="form-control" id="signin-Postalcode" name="Postalcode" placeholder="Postalcode" required></div><br />
+                <div class="col-md-4"><input type="text" class="form-control" id="signin-City" name="City" placeholder="City" required></div><br />
+                <div class="col-md-4"><button type="button" class="btn btn-primary btn-lg btn-block" onclick="submitBtn(this)">SUBMIT</button></div><br />
+            </form>
+        </div>
+    </div>
+</div>
+<script>
+    function submitBtn(e) {
+        $.ajax({
+            url: '/Register/CheckUsername' ,
+            type: "GET",
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            data: { username: $("#signin-username").val() },
+            success: function (dataSerialize) {
+                if (dataSerialize["status"] == "200") {
+                    $("#form-data").submit();
+                }
+                else {
+                    alert(dataSerialize["message"]);
+                }
+            }
+        });
+    }
+</script>
