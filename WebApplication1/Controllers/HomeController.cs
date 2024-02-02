@@ -15,7 +15,6 @@ using System.Net.Http;
 using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
-using WebApplication1.Model;
 using WebApplication1.Models;
 
 namespace WebApplication1.Controllers

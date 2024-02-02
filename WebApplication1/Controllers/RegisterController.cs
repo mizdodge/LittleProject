@@ -13,8 +13,8 @@ using System.Net.Http;
 using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
-using WebApplication1.Model;
 using WebApplication1.Models;
+using WebApplication1.Utils;
 
 namespace WebApplication1.Controllers
 {
@@ -42,18 +42,8 @@ namespace WebApplication1.Controllers
                 username = username,
                 password=""
             };
-            var json = JsonConvert.SerializeObject(login);
-            var content = new StringContent(json, Encoding.UTF8, "application/json");
-            HttpClientHandler clientHandler = new HttpClientHandler();
-            clientHandler.ServerCertificateCustomValidationCallback = (sender, cert, chain, sslPolicyErrors) =>
-            {
-                return true;
-            };
-            HttpClient client = new HttpClient(clientHandler);
-            HttpResponseMessage result = await client.GetAsync(Configuration["UserConfig:PathAPI"] + "/auth/Login/"+username);
-            var jsonresult = await result.Content.ReadAsStringAsync();
-            var response = JsonConvert.DeserializeObject(jsonresult);
-            return Ok(response);
+            var response = JsonConvert.DeserializeObject<ResultModel>(await Helper.GetDataAsync(username,Configuration["UserConfig:PathAPI"] + "/auth/Login/"));
+            return Ok(response);    
         }
 
         // GET: RegisterController/Details/5

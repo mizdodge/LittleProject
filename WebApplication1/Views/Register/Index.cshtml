@@ -28,7 +28,7 @@
             dataType: "json",
             data: { username: $("#signin-username").val() },
             success: function (dataSerialize) {
-                if (dataSerialize["status"] == "200") {
+                if (dataSerialize["status"] == "200") { 
                     $("#form-data").submit();
                 }
                 else {

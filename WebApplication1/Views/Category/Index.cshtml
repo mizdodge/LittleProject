@@ -1,0 +1,67 @@
+﻿@{
+    ViewData["Title"] = "By.Humbi";
+}
+@model List<MyProjectBE.Model.CategoryModel>
+
+<div class="row">
+    <div class="col-md-12 text-center">
+        <h1 class="display-4">Category</h1>
+    </div>
+    <div>
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-2"><button type="button" class="btn btn-primary btn-sm btn-block" onclick="btnAdd(this)">+Add Category</button></div><br /><br />
+    <div class="col-md-12 text-center">
+        <table id="example" class="display table table-striped" style="width:100%">
+            <thead>
+                <tr>
+                    <th>Category ID</th>
+                    <th>Category Name</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+
+                @foreach (var items in Model)
+                {
+                    <tr>
+                        <td>@items.CategoryID</td>
+                        <td>@items.CategoryName</td>
+                        <td><a class="btn btn-info" href="@Url.Action("Edit", "Category", new { CategoryID = items.CategoryID })">Edit</a> <a class="btn btn-primary" href="@Url.Action("Details", "Category", new { CategoryID = items.CategoryID })">Detail</a> <a class="btn btn-danger" onclick="btnDelete(this)" href="#" data-value="@Url.Action("Delete", "Category", new { CategoryID = items.CategoryID })">Delete</a></td>
+                    </tr>
+                }   
+            </tbody>
+        </table>
+    </div>
+</div>
+<script>
+    $(document).ready(function () {
+        $("#example").DataTable();
+    });
+    function btnAdd(e){
+        window.location.href = '@Url.Action("create", "Category")'
+    }
+    function btnDelete(e) {
+        var url = $(e).attr("data-value");
+        if (window.confirm("are you sure want to delete?")) {
+            $.ajax({
+                type: 'DELETE',
+                url: url, // we are calling json method
+                dataType: 'json',
+                data: { dataset: $(e).attr("data-value") },
+                success: function (result) {
+                    if (result["status"] == "200") {
+                        window.location.reload();
+                    }
+                    else {
+                        alert(result["message"]);
+                    }
+                },
+                error: function (ex) {
+                    alert('Failed to retrieve states.' + ex);
+                }
+            });
+        }
+    }
+</script>

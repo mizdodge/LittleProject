@@ -1,4 +1,5 @@
-﻿using System;
+﻿using MasterServices.Model;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -14,6 +15,7 @@ namespace WebApplication1.Models
         public string firstname { get; set; }
         public string lastname { get; set; }
         public bool IsAdmin { get; set; }
+        public UserDetailMaster UserDetail { get; set; }
     }
     public class ListLogin
     {

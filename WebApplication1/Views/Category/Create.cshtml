@@ -1,0 +1,62 @@
+﻿@{
+    ViewData["Title"] = "By.Humbi";
+}
+@model WebApplication1.Models.ResultModel
+@{
+    MyProjectBE.Model.CategoryModel data = null;
+    string CategoryName = "";
+    if (Model != null)
+    {
+        data = Model.data;
+        CategoryName = data.CategoryName;
+        <script>window.alert("Model.message")</script>
+    }
+}
+<div class="">
+    <div class="row"><h2 class="">Register</h2></div>
+    <div class="row">
+        <form class="form-auth-small" asp-controller="Category" asp-action="Create" id="form-data">
+            @Html.AntiForgeryToken()
+            <div class="col-md-6 row">
+                <div class="col-md-4">Category Id </div>
+
+                <div class="col-md-8">
+                    @Html.TextBoxFor(model => data.CategoryID, new { @name="CategoryName", @class = "form-control", @required = "required", id = "CategoryID", @placeholder = "CategoryID", @disabled="disabled" })
+                    @Html.HiddenFor(x => data.CategoryID)
+                </div>
+                <br /><br />
+                <div class="col-md-4">Category Name </div>
+
+                <div class="col-md-8">
+                    @Html.TextBoxFor(model => CategoryName, new { @name="CategoryName", @class = "form-control", @required = "required", id = "CategoryName", @placeholder = "Category Name" })
+                </div>
+                <br /><br />
+                <br /><br />
+                <div class="col-md-4" onclick="backBtn(this)"><button type="button" class="btn btn-success btn-lg btn-block">back</button></div>
+                <div class="col-md-8"><button type="submit" class="btn btn-primary btn-lg btn-block" @* onclick="submitBtn(this)" *@>SUBMIT</button></div>
+            </div>
+        </form>
+    </div>
+</div>
+<script>
+    function submitBtn(e) {
+        // $.ajax({
+        //     url: '/Register/CheckUsername',
+        //     type: "GET",
+        //     contentType: "application/json; charset=utf-8",
+        //     dataType: "json",
+        //     data: { username: $("#signin-username").val() },
+        //     success: function (dataSerialize) {
+        //         if (dataSerialize["status"] == "200") {
+        $("#form-data").submit();
+        //         }
+        //         else {
+        //             alert(dataSerialize["message"]);
+        //         }
+        //     }
+        // });
+    }
+    function backBtn(e) {
+        history.back();
+    }
+</script>

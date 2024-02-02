@@ -1,0 +1,25 @@
+﻿@{
+    ViewData["Title"] = "By.Humbi";
+}
+@model MyProjectBE.Model.CategoryModel
+
+<div class="">
+    <div class="row"><h2 class="">Details</h2></div>
+    <div class="row">
+        <div class="col-md-6 row">
+            <div class="col-md-4">Category Id </div>
+            <div class="col-md-8"><input type="text" class="form-control" id="CategoryID" name="CategoryID" placeholder="CategoryID" value="@Model.CategoryID" disabled></div>
+            <br /><br />
+            <div class="col-md-4">Category Name</div>
+            <div class="col-md-8"><input type="text" class="form-control" id="CategoryName" name="CategoryName" placeholder="CategoryName" value="@Model.CategoryName" disabled></div>
+            <br /><br />
+            <div class="col-md-4"><button type="button" class="btn btn-primary btn-lg btn-block" onclick="submitBtn(this)">Back</button></div><br />
+        </div>
+    </div>
+</div>
+
+<script>
+    function submitBtn(e) {
+        history.back();
+    }
+</script>

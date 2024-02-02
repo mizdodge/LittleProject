@@ -7,14 +7,15 @@ using Microsoft.IdentityModel.Tokens;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
 using System.Net.Http;
 using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
-using WebApplication1.Model;
 using WebApplication1.Models;
+using WebApplication1.Utils;
 
 namespace WebApplication1.Controllers
 {
@@ -43,7 +44,7 @@ namespace WebApplication1.Controllers
         // GET: HomeController1
         public ActionResult Index()
         {
-            var responses = User.Identity.IsAuthenticated ;
+            var responses = User.Identity.IsAuthenticated;
             if (responses)
             {
                 return Redirect("/");
@@ -55,84 +56,88 @@ namespace WebApplication1.Controllers
         }
         public async Task<IActionResult> AuthenticatedUser(string username, string password)
         {
-            var responsez = User.Identity.IsAuthenticated ;
-            if (responsez)
+            try
             {
-                return Redirect("/");
+                var responsez = User.Identity.IsAuthenticated;
+                if (responsez)
+                {
+                    return Redirect("/");
+                }
+                ViewBag.pathurl = "/";
+                IActionResult responses = Unauthorized();
+                var login = new LoginModel()
+                {
+                    username = username,
+                    password = password
+                };
+                var response = JsonConvert.DeserializeObject<ListLogin>(await Helper.PostDataAsync(login,Configuration["UserConfig:PathAPI"] + "/auth/Login")); ;
+                var status = response.status;
+
+                //GET DATA PRIVILEGE
+                if (status == "200")
+                {
+                    //HttpClientHandler clientHandlerUser = new HttpClientHandler();
+                    //clientHandlerUser.ServerCertificateCustomValidationCallback = (sender, cert, chain, sslPolicyErrors) =>
+                    //{
+                    //    return true;
+                    //};
+                    //HttpClient clientUser = new HttpClient(clientHandlerUser);
+                    //HttpRequestMessage requestUser = new HttpRequestMessage(HttpMethod.Get, Configuration["UserConfig:PathAPI"] + "/api/RolesPrivilege");
+                    //HttpResponseMessage responseUser = await clientUser.SendAsync(requestUser);
+                    //var jsonUser = await responseUser.Content.ReadAsStringAsync();
+                    //var objUser = JsonConvert.DeserializeObject<List<RolesAndPrivileges>>(jsonUser);
+                    //var privilege = "";
+                    //foreach (var i in objUser)
+                    //{
+                    //    if (i.rolesname.ToUpper() == rolename.ToUpper())
+                    //    {
+                    //        privilege = i.privilege;
+                    //    }
+                    //}
+
+                    //if (privilege == "All")
+                    //{
+                    //    privilege = "1";
+                    //}
+                    //else if (privilege == "Created Document and View")
+                    //{
+                    //    privilege = "2";
+                    //}
+                    //else
+                    //{
+                    //    privilege = "3";
+                    //}
+
+                    var name = response.data.firstname + " " + response.data.lastname;
+                    var uname = response.data.username;
+                    var IsAdmin = response.data.IsAdmin ? "1" : "0";
+
+                    var token = GenerateJwtToken(login.username);
+                    HttpContext.Session.SetString("JWTToken", token);
+                    HttpContext.Session.SetString("JWTName", name);
+                    HttpContext.Session.SetString("JWTUname", uname);
+                    HttpContext.Session.SetString("JWTIsAdmin", IsAdmin);
+                    //HttpContext.Session.SetString("JWTPrivilege", privilege);
+                    return RedirectToAction("Index", "Home");
+
+                }
+                else
+                {
+                    var res_ = response;
+
+                    //return RedirectToAction("Index", "Login", res_);
+                    return View("Index", res_);
+                }
             }
-            ViewBag.pathurl = "/";
-            IActionResult responses = Unauthorized();
-            var login = new LoginModel()
+            catch (Exception ex)
             {
-                username = username,
-                password = password
-            };
-            var json = JsonConvert.SerializeObject(login);
-            var content = new StringContent(json, Encoding.UTF8, "application/json");
-            HttpClientHandler clientHandler = new HttpClientHandler();
-            clientHandler.ServerCertificateCustomValidationCallback = (sender, cert, chain, sslPolicyErrors) =>
-            {
-                return true;
-            };
-            HttpClient client = new HttpClient(clientHandler);
-            HttpResponseMessage result = await client.PostAsync(Configuration["UserConfig:PathAPI"] + "/auth/Login", content);
-            var jsonresult = await result.Content.ReadAsStringAsync();
-            var response = JsonConvert.DeserializeObject<ListLogin>(jsonresult);
-            var name = response.data.firstname + " " + response.data.lastname;
-            var uname = response.data.username;
-            var IsAdmin = response.data.IsAdmin ? "1" : "0";
-            var status = response.status;
+                ResultModel result = new ResultModel { status = "500", message = ex.Message.ToString() };
+                    return View("Index", result);
 
-            //GET DATA PRIVILEGE
-            if (status == "200")
-            {
-                //HttpClientHandler clientHandlerUser = new HttpClientHandler();
-                //clientHandlerUser.ServerCertificateCustomValidationCallback = (sender, cert, chain, sslPolicyErrors) =>
-                //{
-                //    return true;
-                //};
-                //HttpClient clientUser = new HttpClient(clientHandlerUser);
-                //HttpRequestMessage requestUser = new HttpRequestMessage(HttpMethod.Get, Configuration["UserConfig:PathAPI"] + "/api/RolesPrivilege");
-                //HttpResponseMessage responseUser = await clientUser.SendAsync(requestUser);
-                //var jsonUser = await responseUser.Content.ReadAsStringAsync();
-                //var objUser = JsonConvert.DeserializeObject<List<RolesAndPrivileges>>(jsonUser);
-                //var privilege = "";
-                //foreach (var i in objUser)
-                //{
-                //    if (i.rolesname.ToUpper() == rolename.ToUpper())
-                //    {
-                //        privilege = i.privilege;
-                //    }
-                //}
-
-                //if (privilege == "All")
-                //{
-                //    privilege = "1";
-                //}
-                //else if (privilege == "Created Document and View")
-                //{
-                //    privilege = "2";
-                //}
-                //else
-                //{
-                //    privilege = "3";
-                //}
-
-                var token = GenerateJwtToken(login.username);
-                HttpContext.Session.SetString("JWTToken", token);
-                HttpContext.Session.SetString("JWTName", name);
-                HttpContext.Session.SetString("JWTUname", uname);
-                HttpContext.Session.SetString("JWTIsAdmin", IsAdmin);
-                //HttpContext.Session.SetString("JWTPrivilege", privilege);
-                return RedirectToAction("Index","Home");
-
-            }
-            else
-            {
-                return RedirectToAction("Index", "Login", new { status = status });
+                //return RedirectToAction("Error","Login",new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
             }
 
-        }
+        }   
         private string GenerateJwtToken(string username)
         {
             ViewBag.pathurl = "/";
@@ -163,6 +168,11 @@ namespace WebApplication1.Controllers
             HttpContext.Session.SetString("JWTToken", "");
             HttpContext.SignOutAsync();
             return RedirectToAction("Index", "Login");
+        }
+        [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
+        public IActionResult Error()
+        {
+            return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
         }
     }
 }
